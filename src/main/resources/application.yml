@@ -12,5 +12,5 @@ spring:
 
 geoip:
   database:
-    city-path: /Users/ek/ip-checker/geoip-database/GeoLite2-City.mmdb
-    asn-path: /Users/ek/ip-checker/geoip-database/GeoLite2-ASN.mmdb
+    city-path: "${GEO_IP_CITY}"
+    asn-path: "${GEO_ASN}"
