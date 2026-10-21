@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: "${DB_NAME}"
+    username: "${DB_USER}"
+    password: "${DB_PASS}"
+    driver-class-name: "${DB_DRIVER}"
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+
+geoip:
+  database:
+    city-path: /Users/ek/ip-checker/geoip-database/GeoLite2-City.mmdb
+    asn-path: /Users/ek/ip-checker/geoip-database/GeoLite2-ASN.mmdb
