@@ -14,3 +14,6 @@ geoip:
   database:
     city-path: "${GEO_IP_CITY}"
     asn-path: "${GEO_ASN}"
+  download-urls:
+    city: "${DOWNLOAD_LINK_CITY}"
+    asn: "${DOWNLOAD_LINK_ASN}"
