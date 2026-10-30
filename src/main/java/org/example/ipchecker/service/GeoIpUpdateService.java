@@ -48,41 +48,22 @@ public class GeoIpUpdateService {
     }
 
     private void downloadFile(String sourceUrl, String targetPath) {
-        System.out.println("Скачивание: " + sourceUrl);
-
         int maxAttempts = 3;
-        long waitTimeMillis = 2000;
 
-        for (int attempt = 0; attempt <= maxAttempts; attempt++) {
-            try {
-                URL url = URI.create(sourceUrl).toURL();
-                File targetFile = new File(targetPath);
+        log.info("Скачивание: {}", sourceUrl);
 
-                File parentDir = targetFile.getParentFile();
-                if (parentDir != null && !parentDir.exists()) {
-                    parentDir.mkdirs();
-                }
-
-                try (InputStream in = url.openStream();
-                     ReadableByteChannel rbc = Channels.newChannel(in);
-                     FileOutputStream fos = new FileOutputStream(targetFile)) {
-
-                    fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-                    System.out.println("Файл успешно сохранен -> " + targetPath);
-                    return;
-                }
-            } catch (Exception e) {
-                log.error(e.getMessage(), "Ошибка при скачивании файла %s:");
+        for (int attempt = 0; attempt < maxAttempts; attempt++) {
+            try (InputStream in = URI.create(sourceUrl).toURL().openStream();
+                 ReadableByteChannel rbc = Channels.newChannel(in);
+                 FileOutputStream fos = new FileOutputStream(targetPath)) {
+                fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+                log.info("Файл успешно сохранен -> {}", targetPath);
+                return;
+            }catch (Exception e) {
+                log.error("Ошибка при скачивании файла {}: {}", sourceUrl, e.getMessage(), e);
 
                 if (attempt == maxAttempts) {
                     log.error("Не удалось скачать файл после {} попыток.", maxAttempts);
-                }
-
-                try{
-                    Thread.sleep(waitTimeMillis);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                    break;
                 }
             }
         }
